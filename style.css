@@ -1,0 +1,590 @@
+/* ==========================================================================
+   Neon Ripple • Modern Interactive Tap & Ripple Design System
+   ========================================================================== */
+
+:root {
+  /* Color Palette */
+  --bg-dark: #07080d;
+  --bg-surface: rgba(18, 21, 31, 0.72);
+  --bg-surface-hover: rgba(28, 32, 48, 0.85);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-active: rgba(255, 255, 255, 0.22);
+  --text-main: #f0f3fa;
+  --text-muted: #848c9e;
+  --accent-cyan: #00f2fe;
+  --accent-glow: rgba(0, 242, 254, 0.25);
+
+  /* Typography */
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Space Grotesk', ui-monospace, SFMono-Regular, monospace;
+
+  /* Glassmorphism & Elevation */
+  --glass-blur: blur(20px);
+  --glass-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--border-subtle);
+  --dock-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.75), 0 0 0 1px var(--border-subtle);
+
+  /* Animation Timings */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --trans-fast: 0.18s ease;
+  --trans-normal: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ==========================================================================
+   Base & Reset
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: none; /* Prevents pull-to-refresh & double-tap zoom on touch */
+  cursor: crosshair;
+}
+
+/* ==========================================================================
+   Ambient Background & Subtle Grid
+   ========================================================================== */
+.ambient-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: 
+    radial-gradient(circle at 50% 20%, rgba(29, 38, 77, 0.35) 0%, transparent 60%),
+    radial-gradient(circle at 80% 80%, rgba(55, 20, 80, 0.25) 0%, transparent 50%),
+    radial-gradient(circle at 20% 90%, rgba(14, 50, 70, 0.25) 0%, transparent 50%);
+  z-index: 0;
+  transition: opacity 0.5s ease;
+}
+
+.grid-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
+  z-index: 1;
+}
+
+/* ==========================================================================
+   Stage & Layout Container
+   ========================================================================== */
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 2;
+}
+
+/* Layers for DOM Elements */
+.ripple-layer, .stamp-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.stamp-layer {
+  z-index: 3;
+}
+
+.ripple-layer {
+  z-index: 4;
+}
+
+/* Desktop Subtle Cursor Glow */
+.cursor-glow {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 242, 254, 0.06) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  will-change: transform;
+}
+
+body:hover .cursor-glow {
+  opacity: 1;
+}
+
+@media (pointer: coarse) {
+  .cursor-glow {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   Top HUD Bar
+   ========================================================================== */
+.hud-top {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+  pointer-events: none;
+  max-width: 95vw;
+}
+
+.hud-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--bg-surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-subtle);
+  border-radius: 30px;
+  box-shadow: var(--glass-shadow);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-main);
+  transition: all var(--trans-fast);
+}
+
+.hud-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.coord-values {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.coord-val .axis {
+  color: var(--text-muted);
+  font-size: 11px;
+  margin-right: 2px;
+}
+
+.coord-val strong {
+  font-weight: 600;
+  color: #fff;
+}
+
+.coord-divider {
+  color: var(--border-active);
+  font-size: 10px;
+}
+
+.coord-percent {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.color-preview-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.color-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: hsl(220, 95%, 65%);
+  box-shadow: 0 0 10px currentColor;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.color-value {
+  font-size: 11px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.stats-count {
+  font-weight: 700;
+  color: var(--accent-cyan);
+  font-size: 14px;
+  min-width: 18px;
+  text-align: right;
+}
+
+/* ==========================================================================
+   Center Prompt Hint
+   ========================================================================== */
+.prompt-hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.prompt-hint.dismissed {
+  opacity: 0;
+  transform: translate(-50%, -40%) scale(0.95);
+}
+
+.hint-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-cyan);
+  margin-bottom: 14px;
+  animation: pulse-ring 2.8s infinite ease-in-out;
+}
+
+.hint-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.hint-subtext {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.35);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 16px rgba(0, 242, 254, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 242, 254, 0);
+  }
+}
+
+/* ==========================================================================
+   Bottom Glassmorphic Control Dock
+   ========================================================================== */
+.dock-container {
+  position: fixed;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: auto;
+  max-width: 95vw;
+}
+
+.dock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: var(--bg-surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-subtle);
+  border-radius: 36px;
+  box-shadow: var(--dock-shadow);
+  transition: all var(--trans-normal);
+}
+
+.dock:hover {
+  border-color: var(--border-active);
+}
+
+.dock-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dock-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--border-subtle);
+  margin: 0 4px;
+}
+
+.dock-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 24px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--trans-fast);
+  outline: none;
+}
+
+.dock-btn:hover {
+  color: #fff;
+  background: var(--bg-surface-hover);
+}
+
+.dock-btn:active {
+  transform: scale(0.94);
+}
+
+.dock-btn.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.dock-btn.icon-only {
+  padding: 8px;
+  width: 36px;
+  height: 36px;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.dock-btn svg {
+  flex-shrink: 0;
+  stroke: currentColor;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ==========================================================================
+   Ripple & Circle Effect Dynamics (GPU Optimized)
+   ========================================================================== */
+
+/* 1. Neon Shockwave Ripple (Mode 1) */
+.ripple-entity {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  transform: translate3d(var(--x), var(--y), 0);
+  will-change: transform;
+}
+
+.ripple-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--size, 140px);
+  height: var(--size, 140px);
+  margin-top: calc(var(--size, 140px) / -2);
+  margin-left: calc(var(--size, 140px) / -2);
+  border-radius: 50%;
+  border: 2px solid var(--color);
+  box-shadow: 
+    0 0 20px var(--color-glow),
+    inset 0 0 15px var(--color-glow);
+  transform: scale(0.1);
+  opacity: 0.9;
+  animation: ripple-shockwave 0.85s var(--ease-out-expo) forwards;
+}
+
+.ripple-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(var(--size, 140px) * 0.7);
+  height: calc(var(--size, 140px) * 0.7);
+  margin-top: calc(var(--size, 140px) * -0.35);
+  margin-left: calc(var(--size, 140px) * -0.35);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color) 0%, var(--color-glow) 45%, transparent 75%);
+  transform: scale(0.2);
+  opacity: 0.85;
+  animation: core-burst 0.75s var(--ease-out-expo) forwards;
+}
+
+@keyframes ripple-shockwave {
+  0% {
+    transform: scale(0.05);
+    opacity: 0.95;
+    border-width: 4px;
+  }
+  60% {
+    opacity: 0.6;
+    border-width: 2px;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+    border-width: 1px;
+  }
+}
+
+@keyframes core-burst {
+  0% {
+    transform: scale(0.2);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+
+/* 2. Sparkle Particle Burst (Mode 2) */
+.sparkle-particle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--p-size, 6px);
+  height: var(--p-size, 6px);
+  border-radius: 50%;
+  background-color: var(--color);
+  box-shadow: 0 0 8px var(--color), 0 0 16px var(--color-glow);
+  transform: translate3d(0, 0, 0) scale(1);
+  animation: spark-fly 0.75s var(--ease-out-expo) forwards;
+}
+
+@keyframes spark-fly {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1.4);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--tx), var(--ty), 0) scale(0);
+    opacity: 0;
+  }
+}
+
+/* 3. Persistent Stamp Mode (Mode 3 - Like Index1 Enhanced) */
+.stamp-entity {
+  position: absolute;
+  width: var(--size, 90px);
+  height: var(--size, 90px);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color) 10%, var(--color-glow) 60%, transparent 85%);
+  border: 2px solid var(--color);
+  box-shadow: 0 0 25px var(--color-glow);
+  pointer-events: none;
+  transform: translate3d(var(--x), var(--y), 0) translate(-50%, -50%) scale(0);
+  animation: stamp-pop 0.45s var(--ease-elastic) forwards;
+  will-change: transform;
+}
+
+@keyframes stamp-pop {
+  0% {
+    transform: translate3d(var(--x), var(--y), 0) translate(-50%, -50%) scale(0);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate3d(var(--x), var(--y), 0) translate(-50%, -50%) scale(1);
+    opacity: 0.9;
+  }
+}
+
+.stamp-entity.fade-out {
+  transition: transform 0.4s var(--ease-out-expo), opacity 0.4s ease;
+  transform: translate3d(var(--x), var(--y), 0) translate(-50%, -50%) scale(0) !important;
+  opacity: 0 !important;
+}
+
+/* ==========================================================================
+   Mobile Responsiveness & Media Queries
+   ========================================================================== */
+@media (max-width: 680px) {
+  .hud-top {
+    gap: 6px;
+    width: 94vw;
+    justify-content: space-between;
+  }
+
+  .hud-badge {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .hud-label {
+    display: none; /* Conserve horizontal room on mobile */
+  }
+
+  .coord-percent {
+    display: none;
+  }
+
+  .color-value {
+    display: none; /* Just show color swatch */
+  }
+
+  .dock-container {
+    bottom: max(16px, env(safe-area-inset-bottom));
+  }
+
+  .dock {
+    padding: 5px 8px;
+    gap: 4px;
+  }
+
+  .dock-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .dock-btn span {
+    font-size: 11px;
+  }
+
+  .dock-btn.icon-only {
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+  }
+}
+
+@media (max-width: 380px) {
+  .dock-btn span {
+    display: none; /* Icon-only on very tiny phones */
+  }
+
+  .dock-btn {
+    padding: 7px;
+    border-radius: 50%;
+  }
+}
