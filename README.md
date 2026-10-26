@@ -2,9 +2,14 @@
 
 An interactive, sensory click and tap experience featuring dynamic multi-touch ripples, particle bursts, synthesized audio chimes, and persistent canvas stamps.
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Online-00f2fe?style=for-the-badge&logo=githubpages&logoColor=white)](https://mahesh-yennam.github.io/Neon-Ripple/)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+
+> 🌐 **Live Website**: [https://mahesh-yennam.github.io/Neon-Ripple/](https://mahesh-yennam.github.io/Neon-Ripple/)
+
+![Neon Ripple Preview](preview.png)
 
 ---
 
@@ -42,9 +47,15 @@ An interactive, sensory click and tap experience featuring dynamic multi-touch r
 
 ```text
 Neon-Ripple/
-├── index.html     # Semantic HTML5 stage, HUD, and glass dock
-├── style.css      # Dark aesthetic design system & GPU keyframe animations
-├── script.js      # Interaction engine, multi-touch, and Web Audio API
-└── README.md      # Project documentation
+├── index.html        # Semantic HTML5 stage, HUD, and glass dock
+├── style.css         # Dark aesthetic design system & GPU keyframe animations
+├── script.js         # Interaction engine, multi-touch, and Web Audio API
+├── favicon.svg       # Glowing neon ripple vector favicon
+├── preview.png       # 16:9 HD visual showcase banner
+├── site.webmanifest  # PWA web manifest
+├── sitemap.xml       # Search engine sitemap
+├── robots.txt        # Search engine crawler directives
+├── .gitignore        # Git ignore rules
+└── README.md         # Project documentation
 ```
 

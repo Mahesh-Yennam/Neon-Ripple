@@ -1,0 +1,6 @@
+# Allow all web crawlers
+User-agent: *
+Allow: /
+
+# Sitemap Location
+Sitemap: https://mahesh-yennam.github.io/Neon-Ripple/sitemap.xml
