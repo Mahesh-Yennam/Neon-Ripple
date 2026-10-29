@@ -135,11 +135,121 @@ body:hover .cursor-glow {
 }
 
 /* ==========================================================================
+   Gamility Explorer Return Ribbon
+   ========================================================================== */
+.top-nav-ribbon {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: rgba(7, 8, 13, 0.88);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--border-subtle);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+}
+
+.ribbon-container {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ribbon-left {
+  display: flex;
+  align-items: center;
+}
+
+.ribbon-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: transform var(--trans-fast);
+}
+
+.ribbon-brand:hover {
+  transform: translateY(-1px);
+}
+
+.brand-icon {
+  width: 22px;
+  height: 22px;
+  color: #f59e0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.brand-text {
+  letter-spacing: -0.02em;
+}
+
+.brand-highlight {
+  color: var(--accent-cyan);
+}
+
+.brand-sub {
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(0, 242, 254, 0.12);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(0, 242, 254, 0.28);
+  padding: 2px 7px;
+  border-radius: 9999px;
+  margin-left: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ribbon-right {
+  display: flex;
+  align-items: center;
+}
+
+.ribbon-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all var(--trans-fast);
+}
+
+.ribbon-back-btn:hover {
+  background: rgba(0, 242, 254, 0.15);
+  border-color: rgba(0, 242, 254, 0.35);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
    Top HUD Bar
    ========================================================================== */
 .hud-top {
   position: fixed;
-  top: max(16px, env(safe-area-inset-top));
+  top: calc(52px + max(10px, env(safe-area-inset-top)));
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -530,7 +640,25 @@ body:hover .cursor-glow {
    Mobile Responsiveness & Media Queries
    ========================================================================== */
 @media (max-width: 680px) {
+  .top-nav-ribbon {
+    height: 46px;
+  }
+
+  .ribbon-brand {
+    font-size: 13px;
+  }
+
+  .brand-sub {
+    display: none;
+  }
+
+  .ribbon-back-btn {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+
   .hud-top {
+    top: calc(48px + max(6px, env(safe-area-inset-top)));
     gap: 6px;
     width: 94vw;
     justify-content: space-between;

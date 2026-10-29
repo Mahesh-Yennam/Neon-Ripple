@@ -1,10 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RFQ8M0VSFN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-RFQ8M0VSFN');
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Neon Ripple • Interactive Tap & Canvas Experience</title>
+  <title>Neon Ripple • Interactive Tap & Canvas Experience — Gamility Explorer</title>
   <meta name="description" content="Neon Ripple • Next-level interactive click and tap ripple visualizer with dark mode, multi-touch, synthesized audio chime, and particle dynamics.">
+  <meta name="author" content="Gamility">
   <!-- Favicon & PWA -->
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="manifest" href="site.webmanifest">
@@ -14,11 +25,11 @@
   <link rel="canonical" href="https://mahesh-yennam.github.io/Neon-Ripple/">
   <meta property="og:url" content="https://mahesh-yennam.github.io/Neon-Ripple/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Neon Ripple • Interactive Tap & Canvas Experience">
+  <meta property="og:title" content="Neon Ripple • Interactive Tap & Canvas Experience — Gamility Explorer">
   <meta property="og:description" content="Next-level interactive click and tap ripple visualizer with dark mode, multi-touch, synthesized audio chime, and particle dynamics.">
   <meta property="og:image" content="https://mahesh-yennam.github.io/Neon-Ripple/preview.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Neon Ripple • Interactive Tap & Canvas Experience">
+  <meta name="twitter:title" content="Neon Ripple • Interactive Tap & Canvas Experience — Gamility Explorer">
   <meta name="twitter:description" content="Next-level interactive click and tap ripple visualizer with dark mode, multi-touch, synthesized audio chime, and particle dynamics.">
   <meta name="twitter:image" content="https://mahesh-yennam.github.io/Neon-Ripple/preview.png">
 
@@ -29,8 +40,49 @@
   
   <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Neon Ripple: Sensory Canvas & Synthesizer",
+    "url": "https://mahesh-yennam.github.io/Neon-Ripple/",
+    "description": "Interactive click and multi-touch ripple visualizer with procedural pentatonic audio chime synthesizer, particle burst physics, and persistent canvas stamps.",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript",
+    "isAccessibleForFree": true
+  }
+  </script>
 </head>
 <body>
+  <!-- =========================================================================
+       TOP GAMILITY RETURN RIBBON
+       ========================================================================= -->
+  <header class="top-nav-ribbon" role="banner">
+    <div class="ribbon-container">
+      <div class="ribbon-left">
+        <a href="https://mahesh-yennam.github.io/Gamility/" class="ribbon-brand" title="Gamility Home" aria-label="Gamility Home">
+          <div class="brand-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+            </svg>
+          </div>
+          <span class="brand-text">Gami<span class="brand-highlight">lity</span> <small class="brand-sub">Explorer</small></span>
+        </a>
+      </div>
+      <div class="ribbon-right">
+        <a href="https://mahesh-yennam.github.io/Gamility/explorer.html" class="ribbon-back-btn" title="Back to Explorer Hub">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back to Explorer Hub</span>
+        </a>
+      </div>
+    </div>
+  </header>
   <!-- Ambient Background Canvas & Grid Overlay -->
   <div class="ambient-glow" id="ambientGlow" aria-hidden="true"></div>
   <div class="grid-overlay" aria-hidden="true"></div>
